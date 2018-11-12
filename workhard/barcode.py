@@ -27,15 +27,17 @@ dict_rcode = {
  8: "1001000",
  9: "1110100"
 }
-WIDTH, HEIGHT = 600, 300
-Width_per_code = 10
-Height_per_code = 200
-
+WIDTH, HEIGHT = 1200, 900
+Width_per_code = 2
+Height_per_code = 80  
+xpos,ypos=0,0
+surface = cairo.ImageSurface (cairo.FORMAT_ARGB32, WIDTH, HEIGHT)
+ctx = cairo.Context (surface)
 def Numcre():             #获得随机生成的N位数字
-    num=[]
+    num=[0]
     lnum=[]
     rnum=[]
-    for i in range(12):
+    for i in range(11):
         num.append(random.randint(0,9))
     check1 = 3 * sum(num[1::2]) + sum(num[::2])
     check2 = 10 - check1 % 10
@@ -58,31 +60,79 @@ def Rcodecre(num):              #右边数字转义函数
         code+=dict_rcode[num[i]]
     return code   
 class Drawcode(object):     #画图父类
-    def __init__(self,width,height):
-        self.width=width
-        self.height=height
     
-    def draw(self):
-        lnum,rnum=Numcre()
-        lcode=Lcodecre(lnum)
-        rcode=Rcodecre(rnum)
-        code=lcode+rcode
-        surface = cairo.ImageSurface (cairo.FORMAT_ARGB32, self.width, self.height)
-        ctx = cairo.Context (surface)
-        ctx.translate(50,50)
+    def __init__(self, ctx):
+        self.ctx=ctx
+    def draw(self, code):
+        global xpos,ypos
+        ctx.move_to(xpos,ypos)
         ctx.set_source_rgb(0, 0, 0)
         for i,c in enumerate(code):
-            xpos = Width_per_code *i
+            xpos += Width_per_code 
             if c=='1' :
-                ctx.rectangle(xpos,0,Width_per_code,Height_per_code)
+                ctx.rectangle(xpos,ypos,Width_per_code,Height_per_code)
                 ctx.fill()
-        surface.write_to_png("%s.png" %code)
-
-test=Drawcode(600,300)
-test.draw()
-
-
-
-
-
+        xpos += Width_per_code
+class LeftRightGuard(Drawcode):
+    def __init__(self):
+        super(LeftRightGuard, self).__init__(ctx)
+class CenterGuard(Drawcode):
+    def __init__(self):
+        super(CenterGuard, self).__init__(ctx)
+class Leftcode(Drawcode):
     
+    def draw(self):
+        global lnum
+        lcode=Lcodecre(lnum)
+        global xpos,ypos
+        ctx.move_to(xpos,ypos)
+        ctx.set_source_rgb(0, 0, 0)
+        for i,c in enumerate(lcode):
+            xpos += Width_per_code 
+            if c=='1' :
+                ctx.rectangle(xpos,ypos,Width_per_code,Height_per_code-20)
+                ctx.fill()
+            if i%7==0:
+                ctx.move_to(xpos,ypos+Height_per_code)
+                ctx.set_font_size(16)
+                ctx.show_text("%s"%lnum[i/7])
+        xpos += Width_per_code
+class Rightcode(Drawcode):
+    
+    def draw(self):
+        global rnum
+        rcode=Rcodecre(rnum)
+        global xpos,ypos
+        ctx.move_to(xpos,ypos)
+        ctx.set_source_rgb(0, 0, 0)
+        for i,c in enumerate(rcode):
+            xpos += Width_per_code 
+            if c=='1' :
+                ctx.rectangle(xpos,ypos,Width_per_code,Height_per_code-20)
+                ctx.fill()
+            if i%7==0:
+                ctx.move_to(xpos,ypos+Height_per_code)
+                ctx.set_font_size(16)
+                ctx.show_text("%s"%rnum[i/7])
+        xpos += Width_per_code
+def create():
+    s=Drawcode(ctx)
+    l=Leftcode(ctx)
+    r=Rightcode(ctx)
+    lrg=LeftRightGuard()
+    cg=CenterGuard()
+    lrg.draw("101")
+    l.draw()
+    cg.draw("01010")
+    r.draw()
+    lrg.draw("101")
+for i in (0,1,2):
+    for j in (0,1,2,3):
+        xpos=100+320*i
+        ypos=100+200*j
+        lnum,rnum=Numcre()
+        create()
+surface.write_to_png("code4.png")
+
+
+   
