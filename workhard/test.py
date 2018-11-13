@@ -1,8 +1,11 @@
+#!python2
+#coding=utf-8
 import math
 import random
 import string
 import cairo
-'''left_guard = "101"
+'''
+left_guard = "101"
 right_guard = "101"
 centerguard = "0101"
 dict_lcode = {
@@ -44,8 +47,8 @@ def Numcre():
         lnum.append(num[i])
     return num,lnum
 m,n=Numcre()
-print m,n'''
-'''WIDTH, HEIGHT = 600, 300
+print m,n
+WIDTH, HEIGHT = 600, 300
 Width_per_code = 10
 Height_per_code = 200
 code =[0,1,0,1,0]
@@ -58,10 +61,15 @@ for i,c in enumerate("01010"):
     if c=='0' :
         ctx.rectangle(xpos,0,Width_per_code,Height_per_code)
         ctx.fill()
-surface.write_to_png("3.png")'''
+surface.write_to_png("3.png")
 surface = cairo.ImageSurface (cairo.FORMAT_ARGB32, 100, 100)
 ctx = cairo.Context (surface)
 ctx.set_source_rgb(0, 0, 0)
 ctx.arc(50,50,10,0,2*math.pi)
 ctx.stroke()
-surface.write_to_png("code6.png")
+surface.write_to_png("code6.png")'''
+print "为什么："
+print "1"
+
+a="中文"
+print(a.decode("utf-8").encode("gbk"))
