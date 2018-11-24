@@ -35,6 +35,8 @@ class OpenFile(QtGui.QMainWindow):
         file = open(filename)
         data = file.read()
         self.textEdit.setText(data)
+
+
         
 app = QtGui.QApplication(sys.argv)
 of = OpenFile()
