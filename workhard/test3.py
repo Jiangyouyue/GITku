@@ -3,52 +3,47 @@
 
 import os
 import sys
-from PyQt4 import QtGui,QtCore
+import cairo
+from PyQt4.QtCore import *
+from PyQt4.QtGui import *
+   
+WIDTH=6000                #6000*3500
+HEIGHT=3500
+surface = cairo.ImageSurface (cairo.FORMAT_ARGB32, WIDTH, HEIGHT)
+ctx = cairo.Context (surface)      
+ctx.set_source_rgb(0, 0, 0)     #RGB
+ctx.set_line_width(1); 
+'''ctx.move_to( 140,  220)
+ctx.show_text("Hello World!" )
+surface.write_to_png ("R3.png") '''
 
-class OpenFile(QtGui.QMainWindow):
-    def __init__(self, parent = None):
-        QtGui.QWidget.__init__(self, parent)
-        self.setGeometry(300, 300, 350, 300)
-        self.setWindowTitle('basesys')
-        self.textEdit = QtGui.QTextEdit()
-        self.painter=QtGui.QPainter()
-        self.setCentralWidget(self.painter)
-        self.statusBar()
-        self.setFocus()
-        
-        exit = QtGui.QAction(QtGui.QIcon('open.png'), 'Open', self)
-        exit.setShortcut('Ctrl+O')
-        exit.setStatusTip('Open new File')
-        self.connect(exit, QtCore.SIGNAL('triggered()'), self.paintEvent)
-        
-        menubar = self.menuBar()
-        file = menubar.addMenu('&File')
-        file.addAction(exit)
-        
-    def showDialog(self):
-        filename = QtGui.QFileDialog.getOpenFileName(self, 'Open file', './')
-        file = open(filename)
-        data = file.read()
-        self.textEdit.setText(data)
-
-    def paintEvent(self,event):
-        self.painter.begin(self)
-        #自定义绘制方法
-        self.drawText(event,painter)
-        self.painter.end()
-
-    def drawText(self,event,qp):
-        filename = QtGui.QFileDialog.getOpenFileName(self, 'Open file', './')
-        file = open(filename)
-        data = file.read()
-        #设置画笔的颜色
-        qp.setPen(QColor(168,34,3))
-        #设置字体
-        qp.setFont(QFont('SimSun',20))
-        #绘制文字
-        qp.drawText(event.rect(),Qt.AlignCenter,self.text)
-        
-app = QtGui.QApplication(sys.argv)
-of = OpenFile()
-of.show()
-sys.exit(app.exec_())
+with open('beijingdata.txt') as f:
+    data=[]
+    #x=[]
+    #y=[]
+    for i in range(1627):          #1627
+        s1=(f.readline())
+        s1 = s1.rstrip('\n')
+        data.append(s1.split('\t'))
+        num=int(data[i][2])
+        x=[]
+        y=[]
+        for j in range(num):
+            s2=(f.readline())
+            s2=s2.rstrip('\n')
+            d=s2.split('\t')
+            x.append(int((float(d[0])-440500)))
+            y.append(int((float(d[1])-4427000)))
+        ctx.move_to(x[0],y[0])
+        for k in range(num-1):
+            ctx.line_to(x[k+1],y[k+1])
+        ctx.stroke() 
+        print i  
+    surface.write_to_png ("sys1.png")
+    #for i,value in enumerate(x):
+        #print i,value
+    #for i,value in enumerate(y):
+        #print i,value
+    #x.sort()
+    #y.sort()
+    #print x[0],y[0],x[-1],y[-1]

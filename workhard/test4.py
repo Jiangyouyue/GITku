@@ -6,14 +6,62 @@ import sys
 import cairo
 from PyQt4 import QtGui,QtCore
 
+
+class BtnLabel(QtGui.QLabel):  
+    sig=QtCore.pyqtSignal()
+    def __init__(self,parent=None):  
+        super(BtnLabel,self).__init__(parent)  
+        self.if_mouse_press = 0
+        self.xpos=0
+        self.ypos=0
+        self.xposmove=0
+        self.yposmove=0
+        self.staxpos=0
+        self.stoxpos=0
+        self.staypos=0
+        self.stoypos=0
+        self.xpossig=0
+        self.ypossig=0
+    def mouseMoveEvent(self,e):
+        self.if_mouse_press = 1 
+        if self.if_mouse_press:
+            self.xpos=e.globalPos().x()-300
+            self.ypos=e.globalPos().y()-324
+            #self.sig.emit()
+        #print 2
+        print ('mouse move:(%d,%d)\n'%(e.globalPos().x(),e.globalPos().y()))
+    def mousePressEvent(self,e):  
+        self.if_mouse_press = 1  
+        self.staxpos=e.globalPos().x()-300
+        self.staypos=e.globalPos().y()-324
+        #self.xposmove=self.staxpos-self.stoxpos
+        #self.yposmove=self.staypos-self.stoypos
+        #self.sig.emit()
+        #print 1
+        print ('mouse move:(%d,%d)\n'%(e.globalPos().x(),e.globalPos().y()))
+        
+    def mouseReleaseEvent(self,e): 
+        self.if_mouse_press = 0
+        self.stoxpos=e.globalPos().x()-300
+        self.stoypos=e.globalPos().y()-324
+        self.xposmove=self.stoxpos-self.staxpos
+        self.yposmove=self.stoypos-self.staypos
+        self.xpossig+=self.xposmove
+        self.ypossig+=self.yposmove
+        self.sig.emit()
+        #print 3
+        print ('mouse move:(%d,%d)\n'%(e.globalPos().x(),e.globalPos().y()))
+
 class OpenFile(QtGui.QMainWindow):
     def __init__(self, parent = None):
         QtGui.QWidget.__init__(self, parent)
-        self.setGeometry(300, 300, 350, 300)
+        self.setGeometry(300, 300, 550, 380)
         self.setWindowTitle('basesys')
         self.textEdit = QtGui.QTextEdit()
         self.setCentralWidget(self.layoutt())
         self.defaultnum=[1,1,1,1]
+        self.xpos=0
+        self.ypos=0
         #self.setCentralWidget(self.textEdit)
         self.statusBar()
         self.setFocus()
@@ -45,13 +93,19 @@ class OpenFile(QtGui.QMainWindow):
 
 
     def layoutt(self):
+        main_frame=QtGui.QWidget()
+        self.litmap=BtnLabel(main_frame)
+        self.litmap.setPixmap(QtGui.QPixmap("sys1.png"))
+        self.litmap.setGeometry(0,0,600,600)
         self.lit1=QtGui.QPushButton(u'分析',self)
         self.lit2=QtGui.QPushButton(u'放大',self)
         self.lit3=QtGui.QPushButton(u'缩小',self)
         self.lit4=QtGui.QPushButton(u'缩放适合大小',self)
         self.lit5=QtGui.QPushButton(u'退出',self)
-        self.litmap=QtGui.QLabel(self)
-        self.litmap.setPixmap(QtGui.QPixmap("hello8.png"))
+        self.litpic=QtGui.QLabel(main_frame)
+        self.litpic.setPixmap(QtGui.QPixmap("blank.png"))
+        self.litpic.setGeometry(0,0,1000,700)
+        
         self.litche1=QtGui.QPushButton(u'覆盖情况',self)
         self.litche2=QtGui.QPushButton(u'下行最大速率',self)
 
@@ -62,7 +116,8 @@ class OpenFile(QtGui.QMainWindow):
         self.lit4.clicked.connect(self.onClick4) 
         self.lit5.clicked.connect(self.onClick5) 
         self.litche1.clicked.connect(self.onClickche1)
-        self.litche2.clicked.connect(self.onClickche2)   
+        self.litche2.clicked.connect(self.onClickche2)
+        self.litmap.sig.connect(self.onClickmap)
 
         vbox = QtGui.QVBoxLayout()
         vbox.addStretch()
@@ -76,9 +131,9 @@ class OpenFile(QtGui.QMainWindow):
 
         hbox = QtGui.QHBoxLayout()
         hbox.addStretch()
-        hbox.addWidget(self.litmap)
+        #hbox.addWidget(self.litmap)
         hbox.addLayout(vbox)
-        main_frame=QtGui.QWidget()
+        
         #加载布局
         main_frame.setLayout(hbox)
         return main_frame
@@ -98,6 +153,10 @@ class OpenFile(QtGui.QMainWindow):
         quit()  
     def onClickche2(self,evt):
         quit()
+    def onClickmap(self):
+        self.litmap.setGeometry(self.litmap.xpossig,self.litmap.ypossig,6000,3500)
+        
+    
 
 
     def showDialog(self):
