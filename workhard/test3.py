@@ -1,21 +1,22 @@
 #!python2
 #coding=utf-8
 
+import math
 import os
 import sys
 import cairo
-from PyQt4.QtCore import *
-from PyQt4.QtGui import *
-   
-WIDTH=6000                #6000*3500
-HEIGHT=3500
+from PIL import  Image
+from PyQt4 import QtGui,QtCore
+'''WIDTH=600                #6000*3500
+HEIGHT=500
 surface = cairo.ImageSurface (cairo.FORMAT_ARGB32, WIDTH, HEIGHT)
 ctx = cairo.Context (surface)      
-ctx.set_source_rgb(0, 0, 0)     #RGB
-ctx.set_line_width(1); 
-'''ctx.move_to( 140,  220)
+ctx.set_source_rgb(0.55,0.50,0.55)     #RGB
+ctx.set_line_width(1)
+ctx.set_font_size(28)
+ctx.move_to( 140,  220)
 ctx.show_text("Hello World!" )
-surface.write_to_png ("R3.png") '''
+surface.write_to_png ("helloworld2.png") 
 
 with open('beijingdata.txt') as f:
     data=[]
@@ -46,4 +47,11 @@ with open('beijingdata.txt') as f:
         #print i,value
     #x.sort()
     #y.sort()
-    #print x[0],y[0],x[-1],y[-1]
+    #print x[0],y[0],x[-1],y[-1]'''
+fname='rsrp1.png'
+lis=[[2,2],[3,4],[4,8]]
+for i,n in lis:
+    im = Image.open(fname)
+    width, height = im.size
+    im.thumbnail((width/n, height/n))
+    im.save('rsrp%d.png'%i, 'png')
