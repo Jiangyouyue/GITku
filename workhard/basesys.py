@@ -8,6 +8,8 @@ import cairo
 from PIL import  Image
 from PyQt4 import QtGui,QtCore
 
+
+
 ####新定义的可触发鼠标动作的Label
 class BtnLabel(QtGui.QLabel):  
     sig=QtCore.pyqtSignal()
@@ -68,30 +70,30 @@ class Mainsys(QtGui.QMainWindow):
         self.setWindowTitle('basesys')
         #self.textEdit = QtGui.QTextEdit()
         #self.setMouseTracking(True)
-        self.syspic=['sys1.png','sys2.png','sys3.png','sys4.png']
-        self.syspic1=[['sys1.png','sys2.png','sys3.png','sys4.png'],
-        ['rsrp1.png','rsrp2.png','rsrp3.png','rsrp4.png'],
-        ['bps1.png','bps2.png','bps3.png','bps4.png']]
-        self.picnuma=0
+        self.syspic=['sys1.png','sys2.png','sys3.png','sys4.png','sys4.png']
+        self.syspic1=[['sys1.png','sys2.png','sys3.png','sys4.png','sys5.png'],
+        ['rsrp1.png','rsrp2.png','rsrp3.png','rsrp4.png','rsrp5.png'],
+        ['bps1.png','bps2.png','bps3.png','bps4.png','bps5.png']]
+        self.picnuma=0       #picnuma,picnumb是图片选择参数
         self.picnumb=0
         self.defaultnum=[1,1,1,1]
-        self.data1=[]
-        self.xpos=0
+        self.data1=[]        #基站天线高度参数
+        self.xpos=0          #鼠标绝对位置参数
         self.ypos=0
-        self.picw=6000
+        self.picw=6000       #图片大小参数
         self.pich=3500
         self.fre=900
-        self.noise=-174
+        self.noise=-174 
         self.bw=15000
         self.rsrpl=-110
         self.tips=''
         #self.setCentralWidget(self.textEdit)
-        self.statusBar()
+        self.statusBar()     #
         self.setFocus()
         self.setCentralWidget(self.layoutt())
         self.mainconnect()
 
-        #菜单栏
+        #菜单
         ope = QtGui.QAction(QtGui.QIcon('open.png'), u'打开', self)
         #ope.setShortcut('Ctrl+O')
         #ope.setStatusTip('Open new File')
@@ -106,7 +108,7 @@ class Mainsys(QtGui.QMainWindow):
         hel=QtGui.QAction(QtGui.QIcon("ico.png"), u'作者', self)
         self.connect(hel, QtCore.SIGNAL('triggered()'), self.showDialog3)
 
-        #菜单
+        #菜单栏
         menubar = self.menuBar()
         file = menubar.addMenu('&file')
         file.addAction(ope)
@@ -149,7 +151,7 @@ class Mainsys(QtGui.QMainWindow):
         self.litche1=QtGui.QPushButton(u'覆盖情况',self)
         self.litche2=QtGui.QPushButton(u'下行最大速率',self)
 
-        
+        #布局
 
         vbox = QtGui.QVBoxLayout()
         vbox.addStretch()
@@ -189,7 +191,7 @@ class Mainsys(QtGui.QMainWindow):
 
     #缩小按键响应
     def onClick3(self,evt):         #缩小
-        if self.picnumb<3 :
+        if self.picnumb<4 :
             self.picnumb+=1
             self.picw=self.picw/2
             self.pich=self.pich/2
@@ -225,14 +227,15 @@ class Mainsys(QtGui.QMainWindow):
             self.litmap.ypossig=self.litmap.ypossig*2-190
         else : 
             print u'已达最大'
-    #
+    #地图按键响应
     def onClick4(self,evt):
         self.picnuma=0  
         self.litmap.setPixmap(QtGui.QPixmap(self.syspic1[self.picnuma][self.picnumb]))
         self.litmap.setGeometry(self.litmap.xpossig,self.litmap.ypossig,self.picw,self.pich)
-
+    #退出按键响应
     def onClick5(self,evt):
         quit()
+    #覆盖情况分布按键响应
     def onClickche1(self,evt):
         self.picnuma=1  
         
@@ -258,7 +261,8 @@ class Mainsys(QtGui.QMainWindow):
     ####菜单响应函数
     #打开文件并画图
     def showDialog(self):
-        filename = QtGui.QFileDialog.getOpenFileName(self, 'Open file', './')
+        filename1 = QtGui.QFileDialog.getOpenFileName(self, 'Open file', './')
+        filename = unicode(filename1 , "utf8")
         '''file = open(filename)
         self.data = file.read()
         self.textEdit.setText(self.data)'''
@@ -275,7 +279,7 @@ class Mainsys(QtGui.QMainWindow):
             #data1=[]
             #x=[]
             #y=[]
-            for i in range(1627):          #1627
+            for i in range(1627):          #读取1627个建筑信息
                 s1=(f.readline())
                 s1 = s1.rstrip('\n')
                 data.append(s1.split('\t'))
@@ -295,7 +299,7 @@ class Mainsys(QtGui.QMainWindow):
                     ctx.line_to(x[k+1],y[k+1])
                 ctx.stroke() 
                 #print i 
-            for i1 in range(25):          #1627
+            for i1 in range(25):          #读取25个基站信息
                 ss=(f.readline())
                 ss1=(f.readline())
                 ss1 = ss1.rstrip('\n')
@@ -313,7 +317,7 @@ class Mainsys(QtGui.QMainWindow):
             ctx.stroke()
             surface.write_to_png (self.syspic1[0][0])   
             fname=self.syspic1[0][0]
-            lis=[[2,2],[3,4],[4,8]]
+            lis=[[2,2],[3,4],[4,8],[5,16]]
             for i,n in lis:
                 im = Image.open(fname)
                 width, height = im.size
@@ -376,11 +380,13 @@ class Mainsys(QtGui.QMainWindow):
         a=QtGui.QLabel(dialog)
         a.setText(u'制作人：温翔楠   41524422')
         a.setGeometry(100,100,200,50)
-        dialog.setWindowTitle(u"帮助")
+        dialog.setWindowTitle(u"作者")
         dialog.exec_()
 
 
-        
+print u'初始化中'
+os.system('python basesysadd.py') 
+print u'载入中'    
 app = QtGui.QApplication(sys.argv)
 of = Mainsys()
 of.show()

@@ -51,10 +51,6 @@ with open(filename) as f:
         data1.append(ss1[2])
         xbase.append(int(ss1[0])-440500)
         ybase.append(int(ss1[1])-4427000)
-        ctx.set_source_rgb(1, 0, 0)
-        ctx.set_line_width(4)
-        ctx.arc(x1,y1,50,0,2*math.pi)
-        ctx.stroke() 
     ctx.set_source_rgb(0, 0, 0)  
     ctx.rectangle(0,0,WIDTH,HEIGHT)
     ctx.stroke()
@@ -121,17 +117,13 @@ with open(filename) as f1:
         ctx.arc(x1,y1,50,0,2*math.pi)
         ctx.stroke() 
 surface.write_to_png ('rsrp1.png') 
-
-
-
-
-'''fname='sys1.png'
-    lis=[[2,2],[3,4],[4,8]]
-    for i,n in lis:
-        im = Image.open(fname)
-        width, height = im.size
-        im.thumbnail((width/n, height/n))
-        im.save('sys%d.png'%i, 'png')'''
+fname='rsrp1.png'
+lis=[[2,2],[3,4],[4,8],[5,16]]
+for i,n in lis:
+    im = Image.open(fname)
+    width, height = im.size
+    im.thumbnail((width/n, height/n))
+    im.save('rsrp%d.png'%i, 'png')
 '''def rgbsel(rsrpva,ctx) :
     if ( rsrpva > 50.0 ):
         ctx.set_source_rgb(0, 1, 0) 
