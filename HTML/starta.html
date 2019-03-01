@@ -2,6 +2,7 @@
 <html>
 <head>
 <link rel="stylesheet" type="text/css" href="mystyle.css">
+<script src="jquery.js"></script>
 </head>
 
 
@@ -20,7 +21,7 @@
 
 
 
-<body style="background-color: rgb(255, 251, 0)">
+<body style="background-color: rgb(255, 251, 0)" onload="startTime()">
 <h1>我的第一个标题
     <pre><p style="background-image: url(bgp.jpg); background-repeat: no-repeat;">pic
 
@@ -32,7 +33,7 @@
 <h1>This is a heading  试试大小</h1>
 <hr />
 <h2>This is a heading</h2>
-<h3>This is a heading</h3>
+<h3>&lth3&gtThis is a heading</h3>
 <p>列表</p>
 <ol>
     <li>Coffee</li>
@@ -56,6 +57,56 @@
     你的Lucky NUM
     <input type="number" value="55555">
 </form>
+
+<p>js测试:</p>
+<p id="jsset" >I am a mouse.</p>
+<script> 
+var i=1;
+function myfunction()
+{   x=document.getElementById("jsset");
+    i%2?x.innerHTML="Hello JavaScript!":x.innerHTML="I am a mouse.";  //经典
+    i++;
+    /*if (i%2)
+    {
+    x.innerHTML="Hello JavaScript!";
+    i++;
+    }
+    else
+    {  
+    x.innerHTML="I am a mouse.";
+    i++;
+    }*/
+}
+</script>
+
+<button type="button" onclick="myfunction()">click</button><br/>
+<script type="text/javascript">
+function startTime()
+{
+var today=new Date()
+var h=today.getHours()
+var m=today.getMinutes()
+var s=today.getSeconds()
+document.getElementById('tim').innerHTML=h+":"+m+":"+s;
+t=setTimeout('startTime()',500)
+}
+</script>
+<br/>
+<div id="tim" ></div>
+<script>
+document.write(location.href+'<br/>');
+document.write(location.pathname+'<br/>');
+document.write(document.URL+'<br/>')
+document.write(document.referrer+'<br>')
+
+function newhtml()
+{
+    window.location.assign("file:///F:/workspace/GITku/HTML/startb.html")
+}
+
+</script>
+<input type="button" value="传送门" onclick="newhtml()">
+
 
 </body>
 </html>
