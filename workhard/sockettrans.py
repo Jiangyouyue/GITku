@@ -2,9 +2,9 @@
 #coding=utf-8
 
 
-import socket
+import socket    #服务端
 
-HOST = '10.18.142.42'                 # Symbolic name meaning all available interfaces
+HOST = '10.18.142.205'                 # Symbolic name meaning all available interfaces
 PORT = 50007              # Arbitrary non-privileged port
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.bind((HOST, PORT))
