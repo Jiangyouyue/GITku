@@ -5,16 +5,31 @@
 <script>
 $(document).ready(function(){
     $("button").click(function(){
-        $(this).hide();
+        $("div#exm").hide();
     });
 });
+
 </script>
 </head>
 <body>
 <h1>START A NEW STEP.</h1>
 <P>my new page.</P>
-<div id="exm"></div>
+<div id="exm">my test line.
+</div>
+<input type="text" value="submit form"></br>
+
+<canvas id="drawi" width="200" height="200">drawing test</canvas></br>
+
+
+
+
+
 <script>
+var drawi= document.getElementById("drawi");
+if (drawi.getContext){
+    var context = drawi.getContext("2d");
+}
+
 
 </script>
 <button type="button">Click me</button>
